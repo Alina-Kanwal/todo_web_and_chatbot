@@ -1,0 +1,25 @@
+# Frontend Service Configuration
+# https://docs.railway.app/reference/railway-toml
+
+[build]
+builder = "NIXPACKS"
+nixpacksPlan = """
+[phases.setup]
+nixPkgs = ["nodejs-20_x"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npx next start -p $PORT"
+"""
+
+[deploy]
+startCommand = "npx next start -p $PORT"
+healthcheckPath = "/"
+healthcheckTimeout = 60
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

@@ -1,0 +1,11 @@
+# Railway Configuration for Hackathon Todo App (Monorepo)
+# https://docs.railway.app/reference/railway-toml
+
+# Note: This project requires TWO services on Railway
+# Deploy backend/ and frontend/ as separate services
+
+[build]
+builder = "NIXPACKS"
+
+# Monorepo: specify which directory to use for this service
+# Set RAILWAY_ROOT_DIRECTORY environment variable to 'backend' or 'frontend'
