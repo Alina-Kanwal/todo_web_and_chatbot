@@ -131,7 +131,7 @@ export const authApi = {
     removeToken()
   },
 
-  getCurrentUser: async () => {
+  getCurrentUser: async (): Promise<{ email: string; user_id: number } | null> => {
     return apiRequest('/api/auth/me')
   },
 }
