@@ -35,10 +35,16 @@ class Settings(BaseSettings):
     app_name: str = "Hackathon Todo API"
     debug: bool = False
 
-    # OpenAI
-    openai_api_key: str = ""
+    # Groq AI (for chatbot) - supports both GROQ_API_KEY and OPENAI_API_KEY
+    groq_api_key: str = ""
+    openai_api_key: str = ""  # Alias for GROQ_API_KEY
     openai_model: str = "gpt-4o-mini"
     openai_temperature: float = 0.7
+
+    @property
+    def effective_api_key(self) -> str:
+        """Get effective API key (GROQ_API_KEY takes precedence)."""
+        return self.groq_api_key or self.openai_api_key
 
     @property
     def allowed_origins_list(self) -> list[str]:

@@ -18,11 +18,13 @@ def get_openai_client() -> Groq:
         Groq: Configured Groq client
 
     Raises:
-        ValueError: If OPENAI_API_KEY is not configured
+        ValueError: If GROQ_API_KEY is not configured
     """
-    if not settings.openai_api_key:
-        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    api_key = settings.effective_api_key
+    
+    if not api_key:
+        raise ValueError("GROQ_API_KEY environment variable is not set")
 
     return Groq(
-        api_key=settings.openai_api_key,
+        api_key=api_key,
     )

@@ -183,11 +183,11 @@ async def chat(
         )
 
     try:
-        # Validate OpenAI API key is configured
-        if not settings.openai_api_key:
+        # Validate Groq API key is configured
+        if not settings.effective_api_key:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="OpenAI API key not configured. Please set OPENAI_API_KEY environment variable."
+                detail="GROQ_API_KEY not configured. Please set GROQ_API_KEY environment variable."
             )
 
         # Get or create conversation context

@@ -18,6 +18,7 @@ settings = get_settings()
 logger.info(f"Starting application: {settings.app_name}")
 logger.info(f"Database URL configured: {'***' if settings.database_url else 'MISSING'}")
 logger.info(f"Auth secret configured: {'***' if settings.better_auth_secret else 'MISSING'}")
+logger.info(f"Groq API key configured: {'***' if settings.effective_api_key else 'MISSING (chatbot will not work)'}")
 
 
 def create_application() -> FastAPI:
