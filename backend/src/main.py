@@ -3,22 +3,32 @@ Hackathon Todo API - FastAPI Application
 Main entry point for the backend server.
 """
 
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.core.config import get_settings
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 settings = get_settings()
+logger.info(f"Starting application: {settings.app_name}")
+logger.info(f"Database URL configured: {'***' if settings.database_url else 'MISSING'}")
+logger.info(f"Auth secret configured: {'***' if settings.better_auth_secret else 'MISSING'}")
 
 
 def create_application() -> FastAPI:
     """
     Create and configure FastAPI application.
-    
+
     Returns:
         FastAPI: Configured application instance
     """
+    logger.info("Creating FastAPI application...")
+    
     application = FastAPI(
         title=settings.app_name,
         description="Multi-user todo application with JWT authentication",
@@ -26,7 +36,7 @@ def create_application() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
     )
-    
+
     # Configure CORS
     application.add_middleware(
         CORSMiddleware,
@@ -35,13 +45,14 @@ def create_application() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+    logger.info(f"CORS configured for: {settings.allowed_origins_list}")
+
     # Health check endpoint
     @application.get("/api/health", tags=["Health"])
     async def health_check():
         """
         Health check endpoint for deployment verification.
-        
+
         Returns:
             dict: Service status
         """
@@ -50,7 +61,7 @@ def create_application() -> FastAPI:
             "service": settings.app_name,
             "version": "0.1.0",
         }
-    
+
     # Root endpoint
     @application.get("/", tags=["Root"])
     async def root():
@@ -61,15 +72,22 @@ def create_application() -> FastAPI:
             "docs": "/docs",
             "health": "/api/health",
         }
-    
-    # Include routers
-    from src.api.routes.auth import router as auth_router
-    from src.api.routes.tasks import router as tasks_router
-    from src.api.routes.chat import router as chat_router
-    application.include_router(auth_router)
-    application.include_router(tasks_router)
-    application.include_router(chat_router)
 
+    # Include routers
+    logger.info("Loading API routes...")
+    try:
+        from src.api.routes.auth import router as auth_router
+        from src.api.routes.tasks import router as tasks_router
+        from src.api.routes.chat import router as chat_router
+        application.include_router(auth_router)
+        application.include_router(tasks_router)
+        application.include_router(chat_router)
+        logger.info("API routes loaded successfully")
+    except Exception as e:
+        logger.error(f"Failed to load routes: {e}")
+        raise
+
+    logger.info("Application created successfully!")
     return application
 
 
