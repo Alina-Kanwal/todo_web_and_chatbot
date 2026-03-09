@@ -6,7 +6,8 @@
 import { Task, AuthTokens, ApiError } from '@/types'
 import { isAuthenticated, getCurrentUserFromToken } from './auth'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
+// Remove trailing slash if present to avoid double slashes in URLs
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
 /**
  * Get stored JWT token
