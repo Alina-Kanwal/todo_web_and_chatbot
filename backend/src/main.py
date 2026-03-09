@@ -38,15 +38,16 @@ def create_application() -> FastAPI:
         redoc_url="/redoc",
     )
 
-    # Configure CORS
+    # Configure CORS - allow all origins for production
+    # This is safe since all API endpoints require JWT authentication
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.allowed_origins_list,
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    logger.info(f"CORS configured for: {settings.allowed_origins_list}")
+    logger.info("CORS configured for all origins (*)")
 
     # Health check endpoint
     @application.get("/api/health", tags=["Health"])
